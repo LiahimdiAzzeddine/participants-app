@@ -11,6 +11,8 @@ function ParticipantPortal() {
   const [participant, setParticipant] = useState(null);
   const [participants, setParticipants] = useState([]);
   const [message, setMessage] = useState('');
+  const [cameras, setCameras] = useState([]);
+  const [selectedCamera, setSelectedCamera] = useState('');
   const videoRef = useRef(null);
   const codeReader = useRef(null);
   const { logout, user } = useAuth();
@@ -33,11 +35,34 @@ function ParticipantPortal() {
     
     loadData();
     codeReader.current = new BrowserMultiFormatReader();
+    loadCameras();
 
     return () => {
       stopScanning();
     };
   }, [user?.participantId]);
+
+  const loadCameras = async () => {
+    try {
+      const videoInputDevices = await codeReader.current.listVideoInputDevices();
+      setCameras(videoInputDevices);
+      
+      // Sélectionner automatiquement la caméra arrière
+      const backCamera = videoInputDevices.find(device => 
+        device.label.toLowerCase().includes('back') || 
+        device.label.toLowerCase().includes('rear') ||
+        device.label.toLowerCase().includes('environment')
+      );
+      
+      if (backCamera) {
+        setSelectedCamera(backCamera.deviceId);
+      } else if (videoInputDevices.length > 0) {
+        setSelectedCamera(videoInputDevices[0].deviceId);
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des caméras:', error);
+    }
+  };
 
   const loadParticipants = async () => {
     const data = await readExcelFile('/Participants_QR_Complet.xlsx');
@@ -45,39 +70,24 @@ function ParticipantPortal() {
   };
 
   const startScanning = async () => {
+    if (!selectedCamera) {
+      setMessage('Veuillez sélectionner une caméra');
+      return;
+    }
+
     setScanning(true);
     setMessage('');
 
     try {
-      const videoInputDevices = await codeReader.current.listVideoInputDevices();
-      if (videoInputDevices.length > 0) {
-        // Chercher la caméra arrière (environment)
-        let selectedDevice = videoInputDevices.find(device => 
-          device.label.toLowerCase().includes('back') || 
-          device.label.toLowerCase().includes('rear') ||
-          device.label.toLowerCase().includes('environment')
-        );
-        
-        // Si pas trouvée, utiliser la dernière caméra (souvent la principale)
-        if (!selectedDevice && videoInputDevices.length > 1) {
-          selectedDevice = videoInputDevices[videoInputDevices.length - 1];
-        }
-        
-        // Sinon utiliser la première disponible
-        if (!selectedDevice) {
-          selectedDevice = videoInputDevices[0];
-        }
-
-        codeReader.current.decodeFromVideoDevice(
-          selectedDevice.deviceId,
-          videoRef.current,
-          (result, err) => {
-            if (result) {
-              handleScanResult(result.text);
-            }
+      codeReader.current.decodeFromVideoDevice(
+        selectedCamera,
+        videoRef.current,
+        (result, err) => {
+          if (result) {
+            handleScanResult(result.text);
           }
-        );
-      }
+        }
+      );
     } catch (error) {
       setMessage('Erreur d\'accès à la caméra');
       setScanning(false);
@@ -133,6 +143,24 @@ function ParticipantPortal() {
                 <div className="scanner-icon">📱</div>
                 <h2>Scanner votre QR Code</h2>
                 <p>Scannez le QR Code de votre badge pour accéder à votre fiche</p>
+                
+                {cameras.length > 1 && (
+                  <div className="camera-selector">
+                    <label>Choisir la caméra :</label>
+                    <select 
+                      value={selectedCamera} 
+                      onChange={(e) => setSelectedCamera(e.target.value)}
+                      className="camera-select"
+                    >
+                      {cameras.map(camera => (
+                        <option key={camera.deviceId} value={camera.deviceId}>
+                          {camera.label || `Caméra ${cameras.indexOf(camera) + 1}`}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                
                 <button onClick={startScanning} className="btn-scan">
                   Scanner mon QR Code
                 </button>

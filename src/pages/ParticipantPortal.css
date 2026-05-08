@@ -200,3 +200,33 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+.camera-selector {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 1.5rem;
+  text-align: left;
+}
+
+.camera-selector label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.camera-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+}
+
+.camera-select:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
