@@ -13,6 +13,7 @@ function ParticipantPortal() {
   const [message, setMessage] = useState('');
   const [cameras, setCameras] = useState([]);
   const [selectedCamera, setSelectedCamera] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef(null);
   const codeReader = useRef(null);
   const { logout, user } = useAuth();
@@ -20,6 +21,10 @@ function ParticipantPortal() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Détecter si c'est un mobile en premier
+    const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    setIsMobile(mobile);
+    
     const loadData = async () => {
       const data = await readExcelFile('/Participants_QR_Complet.xlsx');
       setParticipants(data);
@@ -47,17 +52,27 @@ function ParticipantPortal() {
       const videoInputDevices = await codeReader.current.listVideoInputDevices();
       setCameras(videoInputDevices);
       
-      // Sélectionner automatiquement la caméra arrière
-      const backCamera = videoInputDevices.find(device => 
-        device.label.toLowerCase().includes('back') || 
-        device.label.toLowerCase().includes('rear') ||
-        device.label.toLowerCase().includes('environment')
-      );
+      // Détecter si c'est un mobile
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
-      if (backCamera) {
-        setSelectedCamera(backCamera.deviceId);
-      } else if (videoInputDevices.length > 0) {
-        setSelectedCamera(videoInputDevices[0].deviceId);
+      if (isMobile) {
+        // Sur mobile : sélectionner la caméra arrière
+        const backCamera = videoInputDevices.find(device => 
+          device.label.toLowerCase().includes('back') || 
+          device.label.toLowerCase().includes('rear') ||
+          device.label.toLowerCase().includes('environment')
+        );
+        
+        if (backCamera) {
+          setSelectedCamera(backCamera.deviceId);
+        } else if (videoInputDevices.length > 0) {
+          setSelectedCamera(videoInputDevices[0].deviceId);
+        }
+      } else {
+        // Sur laptop/desktop : utiliser la première caméra (webcam)
+        if (videoInputDevices.length > 0) {
+          setSelectedCamera(videoInputDevices[0].deviceId);
+        }
       }
     } catch (error) {
       console.error('Erreur lors du chargement des caméras:', error);
@@ -144,7 +159,7 @@ function ParticipantPortal() {
                 <h2>Scanner votre QR Code</h2>
                 <p>Scannez le QR Code de votre badge pour accéder à votre fiche</p>
                 
-                {cameras.length > 1 && (
+                {isMobile && cameras.length > 1 && (
                   <div className="camera-selector">
                     <label>Choisir la caméra :</label>
                     <select 
