@@ -254,7 +254,13 @@ function AccueilDashboard() {
           </div>
         ) : (
           <div className="scanner-active">
-            <video ref={videoRef} className="scanner-video" />
+            <video 
+              ref={videoRef} 
+              className="scanner-video"
+              autoPlay
+              playsInline
+              muted
+            />
             <button onClick={stopScanning} className="btn-stop-scan">
               Arrêter le scanner
             </button>
