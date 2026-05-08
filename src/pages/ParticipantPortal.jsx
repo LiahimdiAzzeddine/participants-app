@@ -50,12 +50,16 @@ function ParticipantPortal() {
   const loadCameras = async () => {
     try {
       const videoInputDevices = await codeReader.current.listVideoInputDevices();
+      console.log('Caméras détectées:', videoInputDevices);
       setCameras(videoInputDevices);
       
       // Détecter si c'est un mobile
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      console.log('Est mobile:', isMobileDevice);
       
-      if (isMobile) {
+      let selectedDeviceId = '';
+      
+      if (isMobileDevice) {
         // Sur mobile : sélectionner la caméra arrière
         const backCamera = videoInputDevices.find(device => 
           device.label.toLowerCase().includes('back') || 
@@ -63,19 +67,27 @@ function ParticipantPortal() {
           device.label.toLowerCase().includes('environment')
         );
         
+        console.log('Caméra arrière trouvée:', backCamera);
+        
         if (backCamera) {
-          setSelectedCamera(backCamera.deviceId);
+          selectedDeviceId = backCamera.deviceId;
         } else if (videoInputDevices.length > 0) {
-          setSelectedCamera(videoInputDevices[0].deviceId);
+          selectedDeviceId = videoInputDevices[0].deviceId;
         }
       } else {
         // Sur laptop/desktop : utiliser la première caméra (webcam)
         if (videoInputDevices.length > 0) {
-          setSelectedCamera(videoInputDevices[0].deviceId);
+          selectedDeviceId = videoInputDevices[0].deviceId;
+          console.log('Webcam sélectionnée:', videoInputDevices[0]);
         }
       }
+      
+      console.log('Caméra sélectionnée ID:', selectedDeviceId);
+      setSelectedCamera(selectedDeviceId);
+      return selectedDeviceId;
     } catch (error) {
       console.error('Erreur lors du chargement des caméras:', error);
+      return null;
     }
   };
 
@@ -85,26 +97,83 @@ function ParticipantPortal() {
   };
 
   const startScanning = async () => {
-    if (!selectedCamera) {
-      setMessage('Veuillez sélectionner une caméra');
-      return;
-    }
-
-    setScanning(true);
     setMessage('');
 
     try {
-      codeReader.current.decodeFromVideoDevice(
-        selectedCamera,
+      // Si pas de caméra sélectionnée, charger les caméras
+      let cameraId = selectedCamera;
+      if (!cameraId) {
+        const devices = await codeReader.current.listVideoInputDevices();
+        console.log('Caméras disponibles:', devices);
+        
+        if (devices.length === 0) {
+          setMessage('Aucune caméra détectée. Veuillez autoriser l\'accès à la caméra.');
+          return;
+        }
+        
+        // Détecter si mobile
+        const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        console.log('Appareil mobile:', isMobileDevice);
+        
+        if (isMobileDevice) {
+          // Sur mobile : chercher caméra arrière en priorité
+          const backCamera = devices.find(device => 
+            device.label.toLowerCase().includes('back') || 
+            device.label.toLowerCase().includes('rear') ||
+            device.label.toLowerCase().includes('environment') ||
+            device.label.toLowerCase().includes('arrière')
+          );
+          
+          // Si plusieurs caméras et pas de caméra arrière trouvée, prendre la dernière (souvent la principale)
+          if (backCamera) {
+            cameraId = backCamera.deviceId;
+            console.log('Caméra arrière sélectionnée:', backCamera.label);
+          } else if (devices.length > 1) {
+            cameraId = devices[devices.length - 1].deviceId;
+            console.log('Dernière caméra sélectionnée:', devices[devices.length - 1].label);
+          } else {
+            cameraId = devices[0].deviceId;
+            console.log('Première caméra sélectionnée:', devices[0].label);
+          }
+        } else {
+          // Sur laptop/desktop : utiliser la première caméra (webcam)
+          cameraId = devices[0].deviceId;
+          console.log('Webcam sélectionnée:', devices[0].label);
+        }
+        
+        setSelectedCamera(cameraId);
+        setCameras(devices);
+      }
+
+      setScanning(true);
+      console.log('Démarrage du scanner avec caméra:', cameraId);
+
+      await codeReader.current.decodeFromVideoDevice(
+        cameraId,
         videoRef.current,
         (result, err) => {
           if (result) {
+            console.log('QR Code détecté:', result.text);
             handleScanResult(result.text);
+          }
+          if (err && err.name !== 'NotFoundException') {
+            console.error('Erreur de scan:', err);
           }
         }
       );
     } catch (error) {
-      setMessage('Erreur d\'accès à la caméra');
+      console.error('Erreur scanner:', error);
+      let errorMessage = 'Erreur d\'accès à la caméra';
+      
+      if (error.name === 'NotAllowedError') {
+        errorMessage = 'Accès à la caméra refusé. Veuillez autoriser l\'accès dans les paramètres.';
+      } else if (error.name === 'NotFoundError') {
+        errorMessage = 'Aucune caméra trouvée sur cet appareil.';
+      } else if (error.name === 'NotReadableError') {
+        errorMessage = 'La caméra est déjà utilisée par une autre application.';
+      }
+      
+      setMessage(errorMessage);
       setScanning(false);
     }
   };
