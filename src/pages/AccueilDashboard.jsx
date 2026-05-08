@@ -18,8 +18,9 @@ function AccueilDashboard() {
   const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef(null);
   const codeReader = useRef(null);
+  const participantCardRef = useRef(null);
   const { logout } = useAuth();
-  const { markPresent, isPresent, getPresenceInfo, presences } = usePresence();
+  const { markPresent, markAbsent, isPresent, getPresenceInfo, presences } = usePresence();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -223,6 +224,16 @@ function AccueilDashboard() {
           const info = getPresenceInfo(participantId);
           setMessage(`ℹ ${found.participant} déjà pointé à ${info.time}`);
         }
+        
+        // Scroll vers la carte du participant sur mobile
+        setTimeout(() => {
+          if (participantCardRef.current) {
+            participantCardRef.current.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'start'
+            });
+          }
+        }, 300);
       } else {
         setMessage('Participant non trouvé');
       }
@@ -331,8 +342,29 @@ function AccueilDashboard() {
                     </p>
                   </div>
                   <div className="result-actions">
-                    {isPresent(p.id) && (
-                      <span className="badge-present-small">Présent</span>
+                    {isPresent(p.id) ? (
+                      <>
+                        <span className="badge-present-small">Présent</span>
+                        <button
+                          onClick={() => {
+                            markAbsent(p.id);
+                            setMessage(`✗ Présence de ${p.participant} annulée`);
+                          }}
+                          className="btn-cancel"
+                        >
+                          Annuler
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          markPresent(p.id);
+                          setMessage(`✓ ${p.participant} marqué comme présent`);
+                        }}
+                        className="btn-mark-present"
+                      >
+                        Marquer présent
+                      </button>
                     )}
                     <button
                       onClick={() => {
@@ -352,7 +384,7 @@ function AccueilDashboard() {
       </div>
 
       {participant && (
-        <div className="participant-card-accueil">
+        <div ref={participantCardRef} className="participant-card-accueil">
           <div className="card-header-accueil">
             <h3>{participant.participant}</h3>
             {isPresent(participant.id) && (
@@ -391,12 +423,35 @@ function AccueilDashboard() {
               </div>
             )}
           </div>
-          <button
-            onClick={() => navigate(`/participant/${participant.id}`)}
-            className="btn-view-full"
-          >
-            Voir la fiche complète
-          </button>
+          <div className="card-actions">
+            {!isPresent(participant.id) ? (
+              <button
+                onClick={() => {
+                  markPresent(participant.id);
+                  setMessage(`✓ ${participant.participant} marqué comme présent`);
+                }}
+                className="btn-mark-present"
+              >
+                Marquer présent
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  markAbsent(participant.id);
+                  setMessage(`✗ Présence de ${participant.participant} annulée`);
+                }}
+                className="btn-cancel"
+              >
+                Annuler la présence
+              </button>
+            )}
+            <button
+              onClick={() => navigate(`/participant/${participant.id}`)}
+              className="btn-view-full"
+            >
+              Voir la fiche complète
+            </button>
+          </div>
         </div>
       )}
     </div>
