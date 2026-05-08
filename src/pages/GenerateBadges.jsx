@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { QRCodeCanvas } from 'qrcode.react';
 import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 import { readExcelFile } from '../utils/excelReader';
 import './GenerateBadges.css';
 
@@ -35,30 +36,38 @@ function GenerateBadges() {
 
   const generateAllBadges = async () => {
     setGenerating(true);
-    const pdf = new jsPDF('p', 'mm', 'a4');
+    const zip = new JSZip();
+    const folder = zip.folder('badges');
     
     for (let i = 0; i < participants.length; i++) {
       const element = badgeRefs.current[i];
+      const participant = participants[i];
+      
       if (element) {
         const canvas = await html2canvas(element, {
           scale: 2,
           backgroundColor: '#ffffff'
         });
         
-        const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 210;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        // Convertir en blob PNG
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
         
-        if (i > 0) {
-          pdf.addPage();
-        }
+        // Nom du fichier : Badge_PART-0001_NomParticipant.png
+        const fileName = `Badge_${participant.id}_${participant.participant.replace(/[^a-z0-9]/gi, '_')}.png`;
+        folder.file(fileName, blob);
         
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
         setProgress(Math.round(((i + 1) / participants.length) * 100));
       }
     }
     
-    pdf.save(`Badges_${participants.length}_participants.pdf`);
+    // Générer et télécharger le ZIP
+    const content = await zip.generateAsync({ 
+      type: 'blob',
+      compression: 'DEFLATE',
+      compressionOptions: { level: 6 }
+    });
+    
+    saveAs(content, `Badges_${participants.length}_participants.zip`);
     setGenerating(false);
     setProgress(0);
   };
@@ -89,7 +98,7 @@ function GenerateBadges() {
           className="btn-generate"
           disabled={generating}
         >
-          {generating ? `Génération en cours... ${progress}%` : 'Générer tous les badges (PDF)'}
+          {generating ? `Génération en cours... ${progress}%` : 'Télécharger tous les badges (ZIP)'}
         </button>
       </div>
 
@@ -110,16 +119,11 @@ function GenerateBadges() {
             >
               <div className="badge">
                 <div className="badge-header">
-                  <h1>Compétition Veolia</h1>
-                  <p className="badge-subtitle">Mai 2026</p>
+                  <h1>{participant.participant}</h1>
+                  <p className="discipline-tag-header">{participant.discipline}</p>
                 </div>
 
                 <div className="badge-body">
-                  <div className="participant-info">
-                    <h2>{participant.participant}</h2>
-                    <p className="discipline-tag">{participant.discipline}</p>
-                  </div>
-
                   <div className="info-grid">
                     <div className="info-item">
                       <span className="info-label">Société</span>
@@ -128,6 +132,14 @@ function GenerateBadges() {
                     <div className="info-item">
                       <span className="info-label">Direction</span>
                       <span className="info-value">{participant.direction}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Email</span>
+                      <span className="info-value">{participant.emailParticipant}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Responsable</span>
+                      <span className="info-value">{participant.emailResponsable}</span>
                     </div>
                     <div className="info-item">
                       <span className="info-label">Date</span>
@@ -154,6 +166,7 @@ function GenerateBadges() {
                       level="H"
                       includeMargin={true}
                     />
+                    <p className="qr-label">Scannez pour accéder</p>
                     <p className="participant-id">{participant.id}</p>
                   </div>
                 </div>

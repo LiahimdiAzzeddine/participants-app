@@ -3,150 +3,205 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--amendis-red) 0%, var(--amendis-red-dark) 100%);
   padding: 2rem;
 }
 
 .login-container {
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
   max-width: 900px;
   width: 100%;
 }
 
 .login-header {
-  background: #4CAF50;
+  background: linear-gradient(135deg, var(--amendis-red) 0%, var(--amendis-red-dark) 100%);
   color: white;
-  padding: 2rem;
+  padding: 1rem 2rem;
   text-align: center;
-  border-radius: 8px 8px 0 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  position: relative;
+}
+
+.login-header::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--amendis-gray);
 }
 
 .login-header h1 {
-  font-size: 1.8rem;
+  font-size: 2rem;
   margin: 0 0 0.5rem 0;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .login-header p {
   margin: 0;
-  opacity: 0.9;
+  opacity: 0.95;
+  font-size: 1.05rem;
 }
 
 .login-body {
-  padding: 2rem;
+  padding: 1rem 2rem;
 }
 
 .login-body h2 {
   text-align: center;
-  color: #1a1a1a;
+  color: var(--amendis-gray-dark);
   margin-bottom: 2rem;
   font-weight: 600;
+  font-size: 1.5rem;
 }
 
 .role-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .role-card {
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1.5rem;
+  border: 2px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.5rem;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: var(--transition);
+  background: white;
 }
 
 .role-card:hover {
-  border-color: #4CAF50;
+  border-color: var(--amendis-red);
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .role-card.selected {
-  border-color: #4CAF50;
-  background: #f1f8f4;
+  border-color: var(--amendis-red);
+  background: linear-gradient(to bottom, #fff 0%, #fff5f7 100%);
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
 }
 
 .role-icon {
   font-size: 3rem;
-  margin-bottom: 1rem;
+  color: var(--amendis-gray-light);
+  transition: var(--transition);
+}
+
+.role-card.selected .role-icon {
+  color: var(--amendis-red);
+  transform: scale(1.1);
 }
 
 .role-card h3 {
   font-size: 1.2rem;
-  color: #1a1a1a;
-  margin-bottom: 0.5rem;
+  color: var(--amendis-gray-dark);
   font-weight: 600;
 }
 
 .role-card p {
-  color: #666;
+  color: var(--text-medium);
   font-size: 0.9rem;
   margin: 0;
 }
 
 .admin-password {
   margin-bottom: 1.5rem;
+  scroll-margin-top: 100px;
+  scroll-margin-bottom: 100px;
 }
 
 .admin-password label {
-  display: block;
+  display: flex;
+  align-items: center;
   margin-bottom: 0.5rem;
-  color: #333;
-  font-weight: 500;
+  color: var(--amendis-gray-dark);
+  font-weight: 600;
 }
 
 .admin-password input {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 0.875rem;
+  border: 2px solid var(--border-gray);
+  border-radius: var(--radius-sm);
   font-size: 1rem;
+  transition: var(--transition);
+  scroll-margin-top: 120px;
+  scroll-margin-bottom: 120px;
 }
 
 .admin-password input:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: var(--amendis-red);
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
 }
 
 .error-message {
-  background: #ffebee;
-  color: #c62828;
-  padding: 0.75rem;
-  border-radius: 4px;
+  background: var(--warning-light);
+  color: var(--amendis-red-dark);
+  padding: 0.875rem;
+  border-radius: var(--radius-sm);
   margin-bottom: 1rem;
   text-align: center;
+  border-left: 4px solid var(--amendis-red);
+  font-weight: 500;
 }
 
 .btn-login {
   width: 100%;
-  padding: 1rem;
-  background: #4CAF50;
+  padding: 0.5rem;
+  background: var(--amendis-red);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .btn-login:hover:not(:disabled) {
-  background: #45a049;
+  background: var(--amendis-red-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-login:disabled {
-  background: #ccc;
+  background: var(--amendis-gray-light);
   cursor: not-allowed;
+  transform: none;
 }
 
 @media (max-width: 768px) {
+  .login-page {
+    padding: 0.75rem;
+  }
+
+  .login-header {
+    padding: 1rem;
+  }
+
+  .login-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .login-body {
+    padding: 1rem;
+  }
+
   .role-cards {
-    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .role-card {
+    padding: 1rem;
   }
 }

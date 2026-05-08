@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FiShield, FiUsers, FiUser, FiLock } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
@@ -10,9 +11,51 @@ function Login() {
   const [error, setError] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
+  const adminInputRef = useRef(null);
+  const accueilInputRef = useRef(null);
 
   const ADMIN_PASSWORD = 'admin2026'; // À changer en production
   const ACCUEIL_PASSWORD = 'equipe2026'; // À changer en production
+
+  // Auto-focus sur l'input quand un profil est sélectionné
+  useEffect(() => {
+    if (selectedRole === 'admin' && adminInputRef.current) {
+      setTimeout(() => {
+        adminInputRef.current.focus();
+        // Scroll pour rendre l'input visible sur mobile
+        const inputRect = adminInputRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        
+        // Si l'input n'est pas visible, scroller
+        if (inputRect.top < 0 || inputRect.bottom > viewportHeight) {
+          adminInputRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+          });
+        }
+      }, 150);
+    } else if (selectedRole === 'accueil' && accueilInputRef.current) {
+      setTimeout(() => {
+        accueilInputRef.current.focus();
+        // Scroll pour rendre l'input visible sur mobile
+        const inputRect = accueilInputRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        
+        // Si l'input n'est pas visible, scroller
+        if (inputRect.top < 0 || inputRect.bottom > viewportHeight) {
+          accueilInputRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+          });
+        }
+      }, 150);
+    } else if (selectedRole === 'participant') {
+      // Pour le participant, se connecter directement
+      handleLogin();
+    }
+  }, [selectedRole]);
 
   const handleLogin = () => {
     setError('');
@@ -58,7 +101,9 @@ function Login() {
               className={`role-card ${selectedRole === 'admin' ? 'selected' : ''}`}
               onClick={() => setSelectedRole('admin')}
             >
-              <div className="role-icon">👨‍💼</div>
+              <div className="role-icon">
+                <FiShield />
+              </div>
               <h3>Administrateur</h3>
               <p>Gestion complète des participants et génération des badges</p>
             </div>
@@ -67,7 +112,9 @@ function Login() {
               className={`role-card ${selectedRole === 'accueil' ? 'selected' : ''}`}
               onClick={() => setSelectedRole('accueil')}
             >
-              <div className="role-icon">🎫</div>
+              <div className="role-icon">
+                <FiUsers />
+              </div>
               <h3>Équipe d'Accueil</h3>
               <p>Scanner les QR codes et marquer les présences</p>
             </div>
@@ -76,7 +123,9 @@ function Login() {
               className={`role-card ${selectedRole === 'participant' ? 'selected' : ''}`}
               onClick={() => setSelectedRole('participant')}
             >
-              <div className="role-icon">👤</div>
+              <div className="role-icon">
+                <FiUser />
+              </div>
               <h3>Participant</h3>
               <p>Consulter votre fiche et statut de présence</p>
             </div>
@@ -84,8 +133,12 @@ function Login() {
 
           {selectedRole === 'admin' && (
             <div className="admin-password">
-              <label>Mot de passe administrateur</label>
+              <label>
+                <FiLock style={{ marginRight: '0.5rem' }} />
+                Mot de passe administrateur
+              </label>
               <input
+                ref={adminInputRef}
                 type="password"
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
@@ -97,8 +150,12 @@ function Login() {
 
           {selectedRole === 'accueil' && (
             <div className="admin-password">
-              <label>Mot de passe équipe d'accueil</label>
+              <label>
+                <FiLock style={{ marginRight: '0.5rem' }} />
+                Mot de passe équipe d'accueil
+              </label>
               <input
+                ref={accueilInputRef}
                 type="password"
                 value={accueilPassword}
                 onChange={(e) => setAccueilPassword(e.target.value)}

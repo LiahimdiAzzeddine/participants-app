@@ -10,6 +10,8 @@ function AccueilDashboard() {
   const [scanning, setScanning] = useState(false);
   const [participant, setParticipant] = useState(null);
   const [participants, setParticipants] = useState([]);
+  const [filteredParticipants, setFilteredParticipants] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [message, setMessage] = useState('');
   const [cameras, setCameras] = useState([]);
   const [selectedCamera, setSelectedCamera] = useState('');
@@ -28,6 +30,7 @@ function AccueilDashboard() {
     const loadData = async () => {
       const data = await readExcelFile('/Participants_QR_Complet.xlsx');
       setParticipants(data);
+      setFilteredParticipants(data);
     };
     
     loadData();
@@ -38,6 +41,21 @@ function AccueilDashboard() {
       stopScanning();
     };
   }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredParticipants(participants);
+    } else {
+      const query = searchQuery.toLowerCase();
+      const filtered = participants.filter(p => 
+        p.participant.toLowerCase().includes(query) ||
+        p.id.toLowerCase().includes(query) ||
+        p.societe.toLowerCase().includes(query) ||
+        p.discipline.toLowerCase().includes(query)
+      );
+      setFilteredParticipants(filtered);
+    }
+  }, [searchQuery, participants]);
 
   const loadCameras = async () => {
     try {
@@ -103,16 +121,31 @@ function AccueilDashboard() {
       };
       
       console.log('Demande d\'accès caméra avec contraintes:', constraints);
+      console.log('Est mobile:', isMobileDevice);
+      console.log('VideoRef existe:', !!videoRef.current);
       
       // Obtenir le stream vidéo
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       console.log('Stream obtenu:', stream);
+      console.log('Tracks vidéo:', stream.getVideoTracks());
       
       // Attacher le stream à la vidéo
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-        console.log('Vidéo en lecture');
+        
+        // Attendre que les métadonnées soient chargées
+        videoRef.current.onloadedmetadata = () => {
+          console.log('Métadonnées vidéo chargées');
+          console.log('Dimensions vidéo:', videoRef.current.videoWidth, 'x', videoRef.current.videoHeight);
+        };
+        
+        // Forcer la lecture
+        try {
+          await videoRef.current.play();
+          console.log('Vidéo en lecture, readyState:', videoRef.current.readyState);
+        } catch (playError) {
+          console.error('Erreur play():', playError);
+        }
       }
       
       // Démarrer le décodage
@@ -272,6 +305,51 @@ function AccueilDashboard() {
           {message}
         </div>
       )}
+
+      <div className="search-section">
+        <h2>Rechercher un participant</h2>
+        <input
+          type="text"
+          placeholder="Rechercher par nom, ID, société ou discipline..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="search-input"
+        />
+        
+        {searchQuery && (
+          <div className="search-results">
+            <p className="results-count">
+              {filteredParticipants.length} résultat(s) trouvé(s)
+            </p>
+            <div className="results-list">
+              {filteredParticipants.map(p => (
+                <div key={p.id} className="result-item">
+                  <div className="result-info">
+                    <h4>{p.participant}</h4>
+                    <p className="result-details">
+                      {p.id} • {p.discipline} • {p.societe}
+                    </p>
+                  </div>
+                  <div className="result-actions">
+                    {isPresent(p.id) && (
+                      <span className="badge-present-small">Présent</span>
+                    )}
+                    <button
+                      onClick={() => {
+                        setParticipant(p);
+                        setSearchQuery('');
+                      }}
+                      className="btn-select"
+                    >
+                      Sélectionner
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
       {participant && (
         <div className="participant-card-accueil">

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BrowserMultiFormatReader } from '@zxing/library';
+import { FiCamera, FiCheckCircle, FiClock, FiLogOut, FiUser, FiAward, FiMapPin, FiCalendar, FiMail, FiBriefcase } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { usePresence } from '../context/PresenceContext';
 import { readExcelFile } from '../utils/excelReader';
@@ -115,16 +116,31 @@ function ParticipantPortal() {
       };
       
       console.log('Demande d\'accès caméra avec contraintes:', constraints);
+      console.log('Est mobile:', isMobileDevice);
+      console.log('VideoRef existe:', !!videoRef.current);
       
       // Obtenir le stream vidéo
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       console.log('Stream obtenu:', stream);
+      console.log('Tracks vidéo:', stream.getVideoTracks());
       
       // Attacher le stream à la vidéo
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-        console.log('Vidéo en lecture');
+        
+        // Attendre que les métadonnées soient chargées
+        videoRef.current.onloadedmetadata = () => {
+          console.log('Métadonnées vidéo chargées');
+          console.log('Dimensions vidéo:', videoRef.current.videoWidth, 'x', videoRef.current.videoHeight);
+        };
+        
+        // Forcer la lecture
+        try {
+          await videoRef.current.play();
+          console.log('Vidéo en lecture, readyState:', videoRef.current.readyState);
+        } catch (playError) {
+          console.error('Erreur play():', playError);
+        }
       }
       
       // Démarrer le décodage
@@ -194,7 +210,7 @@ function ParticipantPortal() {
       
       if (found) {
         setParticipant(found);
-        setMessage('✓ Fiche chargée avec succès');
+        setMessage('Fiche chargée avec succès');
       } else {
         setMessage('Participant non trouvé');
       }
@@ -214,6 +230,7 @@ function ParticipantPortal() {
           <p>Consultez votre fiche personnelle</p>
         </div>
         <button onClick={logout} className="btn-logout">
+          <FiLogOut style={{ marginRight: '0.5rem' }} />
           Déconnexion
         </button>
       </header>
@@ -223,7 +240,9 @@ function ParticipantPortal() {
           <div className="scanner-container-portal">
             {!scanning ? (
               <div className="scanner-placeholder">
-                <div className="scanner-icon">📱</div>
+                <div className="scanner-icon">
+                  <FiCamera />
+                </div>
                 <h2>Scanner votre QR Code</h2>
                 <p>Scannez le QR Code de votre badge pour accéder à votre fiche</p>
                 
@@ -265,7 +284,8 @@ function ParticipantPortal() {
           </div>
 
           {message && (
-            <div className={`scan-message ${message.includes('✓') ? 'success' : 'error'}`}>
+            <div className={`scan-message ${message.includes('succès') ? 'success' : 'error'}`}>
+              {message.includes('succès') && <FiCheckCircle style={{ marginRight: '0.5rem' }} />}
               {message}
             </div>
           )}
@@ -275,7 +295,9 @@ function ParticipantPortal() {
           <div className="status-banner">
             {present ? (
               <div className="status-present">
-                <span className="status-icon">✓</span>
+                <span className="status-icon">
+                  <FiCheckCircle />
+                </span>
                 <div>
                   <h3>Vous êtes marqué comme présent</h3>
                   <p>Pointé le {presenceInfo.date} à {presenceInfo.time}</p>
@@ -283,7 +305,9 @@ function ParticipantPortal() {
               </div>
             ) : (
               <div className="status-absent">
-                <span className="status-icon">⏳</span>
+                <span className="status-icon">
+                  <FiClock />
+                </span>
                 <div>
                   <h3>Vous n'êtes pas encore pointé</h3>
                   <p>Présentez-vous à l'accueil pour être enregistré</p>
@@ -299,19 +323,31 @@ function ParticipantPortal() {
               <h3>Informations personnelles</h3>
               <div className="info-grid-portal">
                 <div className="info-item-portal">
-                  <span className="label">ID Participant</span>
+                  <span className="label">
+                    <FiUser style={{ marginRight: '0.35rem' }} />
+                    ID Participant
+                  </span>
                   <span className="value">{participant.id}</span>
                 </div>
                 <div className="info-item-portal">
-                  <span className="label">Société</span>
+                  <span className="label">
+                    <FiBriefcase style={{ marginRight: '0.35rem' }} />
+                    Société
+                  </span>
                   <span className="value">{participant.societe}</span>
                 </div>
                 <div className="info-item-portal">
-                  <span className="label">Direction</span>
+                  <span className="label">
+                    <FiBriefcase style={{ marginRight: '0.35rem' }} />
+                    Direction
+                  </span>
                   <span className="value">{participant.direction}</span>
                 </div>
                 <div className="info-item-portal">
-                  <span className="label">Email</span>
+                  <span className="label">
+                    <FiMail style={{ marginRight: '0.35rem' }} />
+                    Email
+                  </span>
                   <span className="value">{participant.emailParticipant}</span>
                 </div>
               </div>
@@ -321,19 +357,31 @@ function ParticipantPortal() {
               <h3>Compétition</h3>
               <div className="info-grid-portal">
                 <div className="info-item-portal">
-                  <span className="label">Discipline</span>
+                  <span className="label">
+                    <FiAward style={{ marginRight: '0.35rem' }} />
+                    Discipline
+                  </span>
                   <span className="value highlight">{participant.discipline}</span>
                 </div>
                 <div className="info-item-portal">
-                  <span className="label">Date</span>
+                  <span className="label">
+                    <FiCalendar style={{ marginRight: '0.35rem' }} />
+                    Date
+                  </span>
                   <span className="value">{participant.dateCompetition}</span>
                 </div>
                 <div className="info-item-portal">
-                  <span className="label">Heure</span>
+                  <span className="label">
+                    <FiClock style={{ marginRight: '0.35rem' }} />
+                    Heure
+                  </span>
                   <span className="value">{participant.heure}</span>
                 </div>
                 <div className="info-item-portal">
-                  <span className="label">Lieu</span>
+                  <span className="label">
+                    <FiMapPin style={{ marginRight: '0.35rem' }} />
+                    Lieu
+                  </span>
                   <span className="value">{participant.lieu}, {participant.ville}</span>
                 </div>
               </div>

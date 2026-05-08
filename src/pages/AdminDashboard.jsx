@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FiUsers, FiCheckCircle, FiXCircle, FiAward, FiSearch, FiDownload, FiFileText, FiLogOut, FiEye } from 'react-icons/fi';
 import { readExcelFile } from '../utils/excelReader';
 import { useAuth } from '../context/AuthContext';
 import { usePresence } from '../context/PresenceContext';
@@ -102,24 +103,29 @@ function AdminDashboard() {
           <p>Gestion des participants et génération des badges</p>
         </div>
         <button onClick={logout} className="btn-logout">
+          <FiLogOut style={{ marginRight: '0.5rem' }} />
           Déconnexion
         </button>
       </header>
 
       <div className="admin-stats">
         <div className="stat-card">
+          <FiUsers className="stat-icon" />
           <span className="stat-number">{participants.length}</span>
           <span className="stat-label">Total Participants</span>
         </div>
         <div className="stat-card">
+          <FiCheckCircle className="stat-icon" />
           <span className="stat-number">{presentCount}</span>
           <span className="stat-label">Présents</span>
         </div>
         <div className="stat-card">
+          <FiXCircle className="stat-icon" />
           <span className="stat-number">{participants.length - presentCount}</span>
           <span className="stat-label">Absents</span>
         </div>
         <div className="stat-card">
+          <FiAward className="stat-icon" />
           <span className="stat-number">{disciplines.length}</span>
           <span className="stat-label">Disciplines</span>
         </div>
@@ -127,13 +133,16 @@ function AdminDashboard() {
 
       <div className="admin-actions">
         <div className="filters-row">
-          <input
-            type="text"
-            placeholder="Rechercher par nom, société ou ID..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
+          <div className="search-wrapper">
+            <FiSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Rechercher par nom, société ou ID..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
           <select
             value={selectedDiscipline}
             onChange={(e) => setSelectedDiscipline(e.target.value)}
@@ -154,9 +163,11 @@ function AdminDashboard() {
             Tout désélectionner
           </button>
           <button onClick={generateBadges} className="btn-action primary">
+            <FiFileText style={{ marginRight: '0.5rem' }} />
             Générer les badges ({selectedParticipants.length || filteredParticipants.length})
           </button>
           <button onClick={exportPresences} className="btn-action secondary">
+            <FiDownload style={{ marginRight: '0.5rem' }} />
             Exporter les présences
           </button>
         </div>
@@ -211,6 +222,7 @@ function AdminDashboard() {
                     onClick={() => navigate(`/participant/${participant.id}`)}
                     className="btn-view-small"
                   >
+                    <FiEye style={{ marginRight: '0.35rem' }} />
                     Voir
                   </button>
                 </td>

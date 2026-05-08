@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { FiSearch, FiMapPin, FiCalendar, FiClock, FiUsers, FiAward, FiCheckCircle } from 'react-icons/fi';
 import { readExcelFile } from '../utils/excelReader';
 import './HomePage.css';
 
@@ -51,31 +52,40 @@ function HomePage() {
   const villes = [...new Set(participants.map(p => p.ville))].filter(Boolean);
 
   if (loading) {
-    return <div className="loading">Chargement des participants...</div>;
+    return (
+      <div className="loading">
+        <div className="spinner"></div>
+        <p>Chargement des participants...</p>
+      </div>
+    );
   }
 
   return (
     <div className="home-page">
       <header className="header">
         <h1>Gestion des Participants</h1>
-        <p>Compétition 'Nom de Compétition' - Mai 2026</p>
+        <p>Tournoi Inter-filiales 2026</p>
         <div className="header-actions">
           <Link to="/checkin" className="btn-checkin-link">
-            Pointage des présences
+            <FiCheckCircle />
+            <span>Pointage des présences</span>
           </Link>
         </div>
       </header>
 
       <div className="filters-container">
-        <div className="filters">
+        <div className="search-wrapper">
+          <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="Rechercher un participant ou société..."
+            placeholder="Rechercher un participant..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
+        </div>
 
+        <div className="filters">
           <select
             value={selectedDiscipline}
             onChange={(e) => setSelectedDiscipline(e.target.value)}
@@ -102,14 +112,17 @@ function HomePage() {
 
       <div className="stats">
         <div className="stat-card">
+          <FiUsers className="stat-icon" />
           <span className="stat-number">{filteredParticipants.length}</span>
           <span className="stat-label">Participants</span>
         </div>
         <div className="stat-card">
+          <FiAward className="stat-icon" />
           <span className="stat-number">{disciplines.length}</span>
           <span className="stat-label">Disciplines</span>
         </div>
         <div className="stat-card">
+          <FiMapPin className="stat-icon" />
           <span className="stat-number">{villes.length}</span>
           <span className="stat-label">Villes</span>
         </div>
@@ -123,14 +136,27 @@ function HomePage() {
             className="participant-card"
           >
             <div className="card-header">
-              <span className="discipline-badge">{participant.discipline}</span>
+              <span className="discipline-badge">
+                <FiAward />
+                {participant.discipline}
+              </span>
               <span className="id-badge">{participant.id}</span>
             </div>
             <h3>{participant.participant}</h3>
             <p className="societe">{participant.societe}</p>
             <div className="card-info">
-              <p className="info-location">{participant.ville}</p>
-              <p className="info-date">{participant.dateCompetition} à {participant.heure}</p>
+              <p className="info-item">
+                <FiMapPin />
+                <span>{participant.ville}</span>
+              </p>
+              <p className="info-item">
+                <FiCalendar />
+                <span>{participant.dateCompetition}</span>
+              </p>
+              <p className="info-item">
+                <FiClock />
+                <span>{participant.heure}</span>
+              </p>
             </div>
           </Link>
         ))}
@@ -138,6 +164,7 @@ function HomePage() {
 
       {filteredParticipants.length === 0 && (
         <div className="no-results">
+          <FiSearch className="no-results-icon" />
           <p>Aucun participant trouvé</p>
         </div>
       )}

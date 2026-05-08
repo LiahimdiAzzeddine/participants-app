@@ -1,0 +1,131 @@
+/* Thème Amendis - Veolia */
+:root {
+  /* Couleurs principales Amendis/Veolia */
+  --amendis-red: #C8102E;
+  --amendis-red-dark: #A00D25;
+  --amendis-red-light: #E6143A;
+  --amendis-gray: #6D6E71;
+  --amendis-gray-light: #9B9B9B;
+  --amendis-gray-dark: #4A4A4A;
+  
+  /* Couleurs secondaires */
+  --white: #FFFFFF;
+  --light-gray: #F5F5F5;
+  --border-gray: #E0E0E0;
+  --text-dark: #1A1A1A;
+  --text-medium: #666666;
+  
+  /* Couleurs de statut */
+  --success: var(--amendis-red);
+  --success-light: #fff5f7;
+  --warning: #FF9800;
+  --warning-light: #FFF3E0;
+  --error: #F44336;
+  --info: #2196F3;
+  
+  /* Ombres */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+  
+  /* Bordures - CARRÉES */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  
+  /* Transitions */
+  --transition: all 0.3s ease;
+}
+
+/* Styles globaux */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-dark);
+  background: var(--light-gray);
+}
+
+/* Boutons principaux */
+.btn-primary {
+  background: var(--amendis-red);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-primary:hover {
+  background: var(--amendis-red-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: var(--amendis-gray);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-secondary:hover {
+  background: var(--amendis-gray-dark);
+}
+
+/* Headers */
+.page-header {
+  background: linear-gradient(135deg, var(--amendis-red) 0%, var(--amendis-red-dark) 100%);
+  color: var(--white);
+  padding: 2rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 2rem;
+}
+
+/* Cards */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Badges */
+.badge-amendis {
+  background: var(--amendis-red);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="password"],
+select,
+textarea {
+  border: 2px solid var(--border-gray);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  transition: var(--transition);
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--amendis-red);
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+}

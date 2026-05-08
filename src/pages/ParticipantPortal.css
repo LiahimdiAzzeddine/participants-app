@@ -58,8 +58,8 @@
 }
 
 .status-present {
-  background: #e8f5e9;
-  border: 2px solid #4CAF50;
+  background: #fff5f7;
+  border: 2px solid var(--amendis-red);
 }
 
 .status-absent {
@@ -69,6 +69,9 @@
 
 .status-icon {
   font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .status-present h3 {
@@ -134,6 +137,8 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
 }
 
 .info-item-portal .value {
@@ -143,7 +148,7 @@
 }
 
 .info-item-portal .value.highlight {
-  color: #4CAF50;
+  color: var(--amendis-red);
   font-weight: 600;
   font-size: 1.1rem;
 }
@@ -166,12 +171,12 @@
 }
 
 .btn-view-badge {
-  background: #4CAF50;
+  background: var(--amendis-red);
   color: white;
 }
 
 .btn-view-badge:hover {
-  background: #45a049;
+  background: var(--amendis-red-dark);
 }
 
 .btn-scan-another {
@@ -182,7 +187,7 @@
 
 .btn-scan-another:hover {
   background: #f5f5f5;
-  border-color: #4CAF50;
+  border-color: var(--amendis-red);
 }
 
 @media (max-width: 768px) {
@@ -190,6 +195,20 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+    padding: 1rem;
+  }
+
+  .participant-portal {
+    padding: 0.75rem;
+  }
+
+  .scanner-container-portal {
+    padding: 1rem;
+    min-height: 300px;
+  }
+
+  .participant-card-portal {
+    padding: 1rem;
   }
 
   .portal-actions {
@@ -198,6 +217,15 @@
 
   .info-grid-portal {
     grid-template-columns: 1fr;
+  }
+
+  .status-banner {
+    margin-bottom: 1rem;
+  }
+
+  .status-present,
+  .status-absent {
+    padding: 1rem;
   }
 }
 
@@ -228,7 +256,7 @@
 
 .camera-select:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: var(--amendis-red);
 }
 
 
@@ -243,11 +271,21 @@
 .scanner-video {
   width: 100%;
   max-width: 500px;
+  height: auto;
+  aspect-ratio: 4/3;
   border-radius: 8px;
   margin-bottom: 1rem;
   background: #000;
   min-height: 300px;
   object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .scanner-video {
+    max-width: 100%;
+    min-height: 400px;
+  }
 }
 
 .btn-stop-scan {
