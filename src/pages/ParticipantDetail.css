@@ -21,6 +21,53 @@
   border-color: #4CAF50;
 }
 
+.presence-banner {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 4px;
+  border: 2px solid;
+}
+
+.presence-banner.present {
+  background: #e8f5e9;
+  border-color: #4CAF50;
+}
+
+.presence-banner.absent {
+  background: #fff3e0;
+  border-color: #ff9800;
+}
+
+.presence-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.presence-icon {
+  font-size: 2.5rem;
+}
+
+.presence-info h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.presence-banner.present h3 {
+  color: #2e7d32;
+}
+
+.presence-banner.absent h3 {
+  color: #e65100;
+}
+
+.presence-info p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
 .badge-container {
   background: white;
   border: 1px solid #e0e0e0;
@@ -166,6 +213,40 @@
 
 .btn-download.primary:hover {
   background: #45a049;
+}
+
+.btn-mark-present {
+  padding: 1rem 2rem;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.btn-mark-present:hover {
+  background: #45a049;
+}
+
+.btn-mark-absent {
+  padding: 1rem 2rem;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.btn-mark-absent:hover {
+  background: #da190b;
 }
 
 .loading,

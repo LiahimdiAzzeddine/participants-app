@@ -4,6 +4,8 @@ import { QRCodeCanvas } from 'qrcode.react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { readExcelFile } from '../utils/excelReader';
+import { useAuth } from '../context/AuthContext';
+import { usePresence } from '../context/PresenceContext';
 import './ParticipantDetail.css';
 
 function ParticipantDetail() {
@@ -12,6 +14,12 @@ function ParticipantDetail() {
   const [loading, setLoading] = useState(true);
   const badgeRef = useRef(null);
   const qrRef = useRef(null);
+  const { user } = useAuth();
+  const { markPresent, markAbsent, isPresent, getPresenceInfo } = usePresence();
+
+  const isAccueil = user?.role === 'accueil';
+  const present = participant ? isPresent(participant.id) : false;
+  const presenceInfo = participant ? getPresenceInfo(participant.id) : null;
 
   useEffect(() => {
     loadParticipant();
@@ -49,6 +57,18 @@ function ParticipantDetail() {
     pdf.save(`Badge_${participant.id}_${participant.participant}.pdf`);
   };
 
+  const handleMarkPresent = () => {
+    if (participant) {
+      markPresent(participant.id);
+    }
+  };
+
+  const handleMarkAbsent = () => {
+    if (participant) {
+      markAbsent(participant.id);
+    }
+  };
+
   if (loading) {
     return <div className="loading">Chargement...</div>;
   }
@@ -66,7 +86,31 @@ function ParticipantDetail() {
 
   return (
     <div className="detail-page">
-      <Link to="/" className="btn-back">← Retour</Link>
+      <Link to={isAccueil ? "/accueil" : "/"} className="btn-back">
+        ← Retour
+      </Link>
+
+      {isAccueil && (
+        <div className={`presence-banner ${present ? 'present' : 'absent'}`}>
+          {present ? (
+            <div className="presence-info">
+              <span className="presence-icon">✓</span>
+              <div>
+                <h3>Participant présent</h3>
+                <p>Pointé le {presenceInfo.date} à {presenceInfo.time}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="presence-info">
+              <span className="presence-icon">⏳</span>
+              <div>
+                <h3>Participant non pointé</h3>
+                <p>Cliquez sur le bouton ci-dessous pour marquer comme présent</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="badge-container" ref={badgeRef}>
         <div className="badge">
@@ -131,12 +175,28 @@ function ParticipantDetail() {
       </div>
 
       <div className="actions">
-        <button onClick={downloadQRCode} className="btn-download">
-          Télécharger le QR Code
-        </button>
-        <button onClick={downloadBadge} className="btn-download primary">
-          Télécharger le badge
-        </button>
+        {isAccueil ? (
+          <>
+            {!present ? (
+              <button onClick={handleMarkPresent} className="btn-mark-present">
+                Marquer comme présent
+              </button>
+            ) : (
+              <button onClick={handleMarkAbsent} className="btn-mark-absent">
+                Annuler la présence
+              </button>
+            )}
+          </>
+        ) : (
+          <>
+            <button onClick={downloadQRCode} className="btn-download">
+              Télécharger le QR Code
+            </button>
+            <button onClick={downloadBadge} className="btn-download primary">
+              Télécharger le badge
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

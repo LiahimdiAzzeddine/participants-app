@@ -59,6 +59,11 @@ function HomePage() {
       <header className="header">
         <h1>Gestion des Participants</h1>
         <p>Compétition 'Nom de Compétition' - Mai 2026</p>
+        <div className="header-actions">
+          <Link to="/checkin" className="btn-checkin-link">
+            Pointage des présences
+          </Link>
+        </div>
       </header>
 
       <div className="filters-container">

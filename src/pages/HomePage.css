@@ -21,6 +21,26 @@
 .header p {
   color: #666;
   font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header-actions {
+  margin-top: 1rem;
+}
+
+.btn-checkin-link {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.btn-checkin-link:hover {
+  background: #45a049;
 }
 
 .filters-container {
