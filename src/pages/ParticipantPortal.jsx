@@ -100,56 +100,36 @@ function ParticipantPortal() {
     setMessage('');
 
     try {
-      // Si pas de caméra sélectionnée, charger les caméras
-      let cameraId = selectedCamera;
-      if (!cameraId) {
-        const devices = await codeReader.current.listVideoInputDevices();
-        console.log('Caméras disponibles:', devices);
-        
-        if (devices.length === 0) {
-          setMessage('Aucune caméra détectée. Veuillez autoriser l\'accès à la caméra.');
-          return;
-        }
-        
-        // Détecter si mobile
-        const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        console.log('Appareil mobile:', isMobileDevice);
-        
-        if (isMobileDevice) {
-          // Sur mobile : chercher caméra arrière en priorité
-          const backCamera = devices.find(device => 
-            device.label.toLowerCase().includes('back') || 
-            device.label.toLowerCase().includes('rear') ||
-            device.label.toLowerCase().includes('environment') ||
-            device.label.toLowerCase().includes('arrière')
-          );
-          
-          // Si plusieurs caméras et pas de caméra arrière trouvée, prendre la dernière (souvent la principale)
-          if (backCamera) {
-            cameraId = backCamera.deviceId;
-            console.log('Caméra arrière sélectionnée:', backCamera.label);
-          } else if (devices.length > 1) {
-            cameraId = devices[devices.length - 1].deviceId;
-            console.log('Dernière caméra sélectionnée:', devices[devices.length - 1].label);
-          } else {
-            cameraId = devices[0].deviceId;
-            console.log('Première caméra sélectionnée:', devices[0].label);
-          }
-        } else {
-          // Sur laptop/desktop : utiliser la première caméra (webcam)
-          cameraId = devices[0].deviceId;
-          console.log('Webcam sélectionnée:', devices[0].label);
-        }
-        
-        setSelectedCamera(cameraId);
-        setCameras(devices);
-      }
-
       setScanning(true);
-      console.log('Démarrage du scanner avec caméra:', cameraId);
-
-      await codeReader.current.decodeFromVideoDevice(
-        cameraId,
+      
+      // Détecter si mobile
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      // Configuration de la caméra
+      const constraints = {
+        video: {
+          facingMode: isMobileDevice ? { ideal: 'environment' } : 'user',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      };
+      
+      console.log('Demande d\'accès caméra avec contraintes:', constraints);
+      
+      // Obtenir le stream vidéo
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      console.log('Stream obtenu:', stream);
+      
+      // Attacher le stream à la vidéo
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+        console.log('Vidéo en lecture');
+      }
+      
+      // Démarrer le décodage
+      codeReader.current.decodeFromVideoDevice(
+        undefined, // Laisser undefined pour utiliser le stream déjà attaché
         videoRef.current,
         (result, err) => {
           if (result) {
@@ -161,6 +141,7 @@ function ParticipantPortal() {
           }
         }
       );
+      
     } catch (error) {
       console.error('Erreur scanner:', error);
       let errorMessage = 'Erreur d\'accès à la caméra';
@@ -171,6 +152,18 @@ function ParticipantPortal() {
         errorMessage = 'Aucune caméra trouvée sur cet appareil.';
       } else if (error.name === 'NotReadableError') {
         errorMessage = 'La caméra est déjà utilisée par une autre application.';
+      } else if (error.name === 'OverconstrainedError') {
+        errorMessage = 'Impossible d\'accéder à la caméra arrière. Utilisation de la caméra frontale.';
+        // Réessayer avec la caméra frontale
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            await videoRef.current.play();
+          }
+        } catch (e) {
+          console.error('Erreur caméra frontale:', e);
+        }
       }
       
       setMessage(errorMessage);
@@ -181,6 +174,12 @@ function ParticipantPortal() {
   const stopScanning = () => {
     if (codeReader.current) {
       codeReader.current.reset();
+    }
+    // Arrêter le stream vidéo
+    if (videoRef.current && videoRef.current.srcObject) {
+      const tracks = videoRef.current.srcObject.getTracks();
+      tracks.forEach(track => track.stop());
+      videoRef.current.srcObject = null;
     }
     setScanning(false);
   };
