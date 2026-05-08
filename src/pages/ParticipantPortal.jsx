@@ -51,8 +51,25 @@ function ParticipantPortal() {
     try {
       const videoInputDevices = await codeReader.current.listVideoInputDevices();
       if (videoInputDevices.length > 0) {
+        // Chercher la caméra arrière (environment)
+        let selectedDevice = videoInputDevices.find(device => 
+          device.label.toLowerCase().includes('back') || 
+          device.label.toLowerCase().includes('rear') ||
+          device.label.toLowerCase().includes('environment')
+        );
+        
+        // Si pas trouvée, utiliser la dernière caméra (souvent la principale)
+        if (!selectedDevice && videoInputDevices.length > 1) {
+          selectedDevice = videoInputDevices[videoInputDevices.length - 1];
+        }
+        
+        // Sinon utiliser la première disponible
+        if (!selectedDevice) {
+          selectedDevice = videoInputDevices[0];
+        }
+
         codeReader.current.decodeFromVideoDevice(
-          videoInputDevices[0].deviceId,
+          selectedDevice.deviceId,
           videoRef.current,
           (result, err) => {
             if (result) {
