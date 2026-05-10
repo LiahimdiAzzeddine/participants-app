@@ -17,7 +17,7 @@ function HomePage() {
   }, []);
 
   const loadParticipants = async () => {
-    const data = await readExcelFile('/Participants_QR_Complet.xlsx');
+    const data = await readExcelFile('/Participants_QR_new.xlsx');
     setParticipants(data);
     setFilteredParticipants(data);
     setLoading(false);
@@ -33,7 +33,7 @@ function HomePage() {
     if (searchTerm) {
       filtered = filtered.filter(p =>
         p.participant.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.societe.toLowerCase().includes(searchTerm.toLowerCase())
+        p.filiale.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -143,7 +143,7 @@ function HomePage() {
               <span className="id-badge">{participant.id}</span>
             </div>
             <h3>{participant.participant}</h3>
-            <p className="societe">{participant.societe}</p>
+            <p className="societe">{participant.filiale}</p>
             <div className="card-info">
               <p className="info-item">
                 <FiMapPin />

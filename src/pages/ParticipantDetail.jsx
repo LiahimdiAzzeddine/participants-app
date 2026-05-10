@@ -26,7 +26,7 @@ function ParticipantDetail() {
   }, [id]);
 
   const loadParticipant = async () => {
-    const data = await readExcelFile('/Participants_QR_Complet.xlsx');
+    const data = await readExcelFile('/Participants_QR_new.xlsx');
     const found = data.find(p => p.id === id);
     setParticipant(found);
     setLoading(false);
@@ -127,34 +127,6 @@ function ParticipantDetail() {
             <div className="info-grid">
               <div className="info-item">
                 <span className="info-label">
-                  <FiBriefcase style={{ marginRight: '0.35rem' }} />
-                  Société
-                </span>
-                <span className="info-value">{participant.societe}</span>
-              </div>
-              <div className="info-item">
-                <span className="info-label">
-                  <FiBriefcase style={{ marginRight: '0.35rem' }} />
-                  Direction
-                </span>
-                <span className="info-value">{participant.direction}</span>
-              </div>
-              <div className="info-item">
-                <span className="info-label">
-                  <FiMail style={{ marginRight: '0.35rem' }} />
-                  Email
-                </span>
-                <span className="info-value">{participant.emailParticipant}</span>
-              </div>
-              <div className="info-item">
-                <span className="info-label">
-                  <FiUser style={{ marginRight: '0.35rem' }} />
-                  Responsable
-                </span>
-                <span className="info-value">{participant.emailResponsable}</span>
-              </div>
-              <div className="info-item">
-                <span className="info-label">
                   <FiCalendar style={{ marginRight: '0.35rem' }} />
                   Date
                 </span>
@@ -186,7 +158,7 @@ function ParticipantDetail() {
             <div className="qr-section" ref={qrRef}>
               <QRCodeCanvas
                 value={qrUrl}
-                size={200}
+                size={160}
                 level="H"
                 includeMargin={true}
               />

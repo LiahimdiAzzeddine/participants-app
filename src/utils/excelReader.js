@@ -35,12 +35,11 @@ export const readExcelFile = async (filePath) => {
     if (data.length > 0) {
       console.log('Colonnes Excel détectées:', Object.keys(data[0]));
       console.log('Première ligne de données:', data[0]);
-      console.log('Valeur brute Date compétition:', data[0]['Date compétition']);
     }
     
     return data.map((row, index) => {
-      // Essayer différentes variantes du nom de colonne
-      let dateCompetition = row['Date compétition'] || row['Date competition'] || row['Date'] || row['DATE'] || '';
+      // Essayer différentes variantes du nom de colonne pour la date
+      let dateCompetition = row['Jour'] || row['Date compétition'] || row['Date competition'] || row['Date'] || row['DATE'] || '';
       
       console.log(`Ligne ${index + 1} - Date brute:`, dateCompetition);
       
@@ -55,14 +54,15 @@ export const readExcelFile = async (filePath) => {
         id: `PART-${String(index + 1).padStart(4, '0')}`,
         discipline: row.Disciplines || row.Discipline || '',
         participant: row.Participant || '',
-        societe: row.Société || '',
-        emailParticipant: row['Email participant'] || '',
-        emailResponsable: row['Email responsable'] || '',
+        filiale: row.Fililales || row.Filiale || row.Société || '',
+        emailParticipant: row['Adresse mail'] || row['Email participant'] || '',
+        emailResponsable: row['Adresse Mail Hiérarchie'] || row['Email responsable'] || '',
         direction: row.Direction || '',
         dateCompetition: dateCompetition,
-        heure: row.Heure || '',
+        heure: row['Démarrage de la compétition'] || row.Heure || '',
         lieu: row.Lieu || '',
-        ville: row.Ville || ''
+        ville: row.Ville || '',
+        villeDepart: row['Ville de départ'] || ''
       };
     });
   } catch (error) {

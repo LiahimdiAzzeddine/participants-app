@@ -27,7 +27,7 @@ function ParticipantPortal() {
     setIsMobile(mobile);
     
     const loadData = async () => {
-      const data = await readExcelFile('/Participants_QR_Complet.xlsx');
+      const data = await readExcelFile('/Participants_QR_new.xlsx');
       setParticipants(data);
       
       // Si l'utilisateur a déjà un participant ID, le charger
@@ -332,9 +332,9 @@ function ParticipantPortal() {
                 <div className="info-item-portal">
                   <span className="label">
                     <FiBriefcase style={{ marginRight: '0.35rem' }} />
-                    Société
+                    Filiale
                   </span>
-                  <span className="value">{participant.societe}</span>
+                  <span className="value">{participant.filiale}</span>
                 </div>
                 <div className="info-item-portal">
                   <span className="label">
@@ -384,6 +384,15 @@ function ParticipantPortal() {
                   </span>
                   <span className="value">{participant.lieu}, {participant.ville}</span>
                 </div>
+                {participant.villeDepart && (
+                  <div className="info-item-portal">
+                    <span className="label">
+                      <FiMapPin style={{ marginRight: '0.35rem' }} />
+                      Ville de départ
+                    </span>
+                    <span className="value">{participant.villeDepart}</span>
+                  </div>
+                )}
               </div>
             </div>
 

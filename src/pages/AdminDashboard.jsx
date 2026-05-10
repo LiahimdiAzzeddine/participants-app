@@ -21,7 +21,7 @@ function AdminDashboard() {
   }, []);
 
   const loadParticipants = async () => {
-    const data = await readExcelFile('/Participants_QR_Complet.xlsx');
+    const data = await readExcelFile('/Participants_QR_new.xlsx');
     setParticipants(data);
     setFilteredParticipants(data);
   };
@@ -32,7 +32,7 @@ function AdminDashboard() {
     if (searchTerm) {
       filtered = filtered.filter(p =>
         p.participant.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.societe.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.filiale.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.id.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -71,10 +71,11 @@ function AdminDashboard() {
     const data = participants.map(p => ({
       ID: p.id,
       Participant: p.participant,
-      Société: p.societe,
+      Filiale: p.filiale,
       Discipline: p.discipline,
       Direction: p.direction,
       Ville: p.ville,
+      'Ville de départ': p.villeDepart || '-',
       Présent: presences[p.id] ? 'Oui' : 'Non',
       'Heure pointage': presences[p.id]?.time || '-',
       'Date pointage': presences[p.id]?.date || '-'
@@ -137,7 +138,7 @@ function AdminDashboard() {
             <FiSearch className="search-icon" />
             <input
               type="text"
-              placeholder="Rechercher par nom, société ou ID..."
+              placeholder="Rechercher par nom, filiale ou ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
@@ -186,7 +187,7 @@ function AdminDashboard() {
               </th>
               <th>ID</th>
               <th>Participant</th>
-              <th>Société</th>
+              <th>Filiale</th>
               <th>Discipline</th>
               <th>Direction</th>
               <th>Ville</th>
@@ -206,7 +207,7 @@ function AdminDashboard() {
                 </td>
                 <td>{participant.id}</td>
                 <td className="participant-name">{participant.participant}</td>
-                <td>{participant.societe}</td>
+                <td>{participant.filiale}</td>
                 <td><span className="discipline-tag">{participant.discipline}</span></td>
                 <td>{participant.direction}</td>
                 <td>{participant.ville}</td>

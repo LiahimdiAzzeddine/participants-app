@@ -90,6 +90,9 @@
   overflow: hidden;
   margin-bottom: 1.5rem;
   box-shadow: var(--shadow-md);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .badge {
@@ -99,13 +102,13 @@
 .badge-header {
   background: linear-gradient(135deg, var(--amendis-red) 0%, var(--amendis-red-dark) 100%);
   color: white;
-  padding: 1.5rem 2rem;
+  padding: 1.25rem 1.5rem;
   text-align: center;
 }
 
 .badge-header h1 {
-  font-size: 1.85rem;
-  margin: 0 0 0.75rem 0;
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
   font-weight: 700;
 }
 
@@ -113,23 +116,23 @@
   display: inline-block;
   background: rgba(255, 255, 255, 0.25);
   color: white;
-  padding: 0.5rem 1.25rem;
+  padding: 0.4rem 1rem;
   border-radius: var(--radius-sm);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   margin: 0;
   border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
 .badge-subtitle {
-  font-size: 1rem;
+  font-size: 0.9rem;
   opacity: 0.95;
   margin: 0;
   font-weight: 500;
 }
 
 .badge-body {
-  padding: 2rem;
+  padding: 1.25rem;
 }
 
 .participant-info {
@@ -160,22 +163,23 @@
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-  margin-bottom: 2rem;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  background: var(--light-gray);
-  padding: 1rem;
+  gap: 0.25rem;
+  background: #f8f9fa;
+  padding: 0.5rem;
   border-radius: var(--radius-sm);
   border-left: 3px solid var(--amendis-red);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .info-label {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   color: var(--amendis-gray);
   font-weight: 600;
   text-transform: uppercase;
@@ -185,15 +189,17 @@
 }
 
 .info-value {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--text-dark);
   font-weight: 500;
-  word-break: break-word;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .qr-section {
   text-align: center;
-  padding: 1.5rem;
+  padding: 1rem;
   background: white;
   border-radius: var(--radius-sm);
   border: 2px solid var(--amendis-red);
@@ -202,17 +208,19 @@
 .qr-section canvas {
   margin: 0 auto;
   display: block;
+  width: 160px !important;
+  height: 160px !important;
 }
 
 .qr-label {
-  margin: 1rem 0 0.5rem 0;
+  margin: 0.75rem 0 0.35rem 0;
   color: var(--amendis-gray);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .participant-id {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--amendis-red);
   margin: 0;
@@ -298,25 +306,29 @@
     padding: 0.75rem;
   }
 
+  .badge-container {
+    max-width: 100%;
+  }
+
   .badge-header {
-    padding: 1.25rem 1.5rem;
+    padding: 1rem 1.25rem;
   }
 
   .badge-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
 
   .discipline-tag-header {
-    font-size: 0.85rem;
-    padding: 0.4rem 1rem;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.85rem;
   }
 
   .badge-subtitle {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   .badge-body {
-    padding: 1.5rem 1rem;
+    padding: 1rem;
   }
 
   .participant-info {
@@ -330,28 +342,28 @@
 
   .info-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 0.6rem;
   }
 
   .info-item {
-    padding: 0.85rem;
+    padding: 0.5rem;
   }
 
   .info-label {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
   }
 
   .info-value {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .qr-section {
-    padding: 1.25rem;
+    padding: 0.85rem;
   }
 
   .qr-section canvas {
-    width: 180px !important;
-    height: 180px !important;
+    width: 140px !important;
+    height: 140px !important;
   }
 
   .actions {
@@ -382,20 +394,20 @@
 
 @media (max-width: 480px) {
   .badge-header {
-    padding: 1rem;
+    padding: 0.85rem 1rem;
   }
 
   .badge-header h1 {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
   }
 
   .discipline-tag-header {
-    font-size: 0.8rem;
-    padding: 0.35rem 0.85rem;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.75rem;
   }
 
   .badge-body {
-    padding: 1rem 0.75rem;
+    padding: 0.85rem;
   }
 
   .participant-info h2 {
@@ -407,8 +419,12 @@
     padding: 0.4rem 1rem;
   }
 
+  .info-item {
+    padding: 0.45rem;
+  }
+
   .qr-section canvas {
-    width: 160px !important;
-    height: 160px !important;
+    width: 120px !important;
+    height: 120px !important;
   }
 }

@@ -97,8 +97,8 @@
 
 .badges-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
 .badge-preview {
@@ -106,23 +106,24 @@
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
 
 .badge {
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .badge-header {
   text-align: center;
   background: linear-gradient(135deg, var(--amendis-red) 0%, var(--amendis-red-dark) 100%);
   color: white;
-  padding: 1.5rem;
-  margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+  padding: 1rem;
+  margin: -1rem -1rem 1rem -1rem;
 }
 
 .badge-header h1 {
-  font-size: 1.5rem;
-  margin: 0 0 0.75rem 0;
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
   font-weight: 700;
 }
 
@@ -130,9 +131,9 @@
   display: inline-block;
   background: rgba(255, 255, 255, 0.25);
   color: white;
-  padding: 0.4rem 1rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 3px;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 600;
   margin: 0;
   border: 2px solid rgba(255, 255, 255, 0.4);
@@ -145,22 +146,23 @@
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  background: #f5f5f5;
-  padding: 0.75rem;
+  gap: 0.25rem;
+  background: #f8f9fa;
+  padding: 0.5rem;
   border-radius: 3px;
   border-left: 3px solid var(--amendis-red);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .info-label {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: var(--amendis-gray);
   font-weight: 600;
   text-transform: uppercase;
@@ -168,15 +170,17 @@
 }
 
 .info-value {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #1a1a1a;
   font-weight: 500;
-  word-break: break-word;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .qr-section {
   text-align: center;
-  padding: 1rem;
+  padding: 0.85rem;
   background: white;
   border-radius: 3px;
   border: 2px solid var(--amendis-red);
@@ -185,17 +189,19 @@
 .qr-section canvas {
   margin: 0 auto;
   display: block;
+  width: 120px !important;
+  height: 120px !important;
 }
 
 .qr-label {
-  margin: 0.75rem 0 0.35rem 0;
+  margin: 0.6rem 0 0.3rem 0;
   color: var(--amendis-gray);
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
 }
 
 .participant-id {
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: var(--amendis-red);
   margin: 0;
@@ -221,41 +227,42 @@
 
   .badges-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
   .badge {
-    padding: 1rem;
+    padding: 0.85rem;
   }
 
   .badge-header {
-    padding: 1.25rem;
-    margin: -1rem -1rem 1.25rem -1rem;
+    padding: 1rem;
+    margin: -0.85rem -0.85rem 1rem -0.85rem;
   }
 
   .badge-header h1 {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
   }
 
   .discipline-tag-header {
-    font-size: 0.75rem;
-    padding: 0.35rem 0.85rem;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.75rem;
   }
 
   .info-grid {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 0.6rem;
   }
 
   .info-item {
-    padding: 0.65rem;
+    padding: 0.45rem;
   }
 
   .qr-section {
-    padding: 0.85rem;
+    padding: 0.75rem;
   }
 
   .qr-section canvas {
-    width: 130px !important;
-    height: 130px !important;
+    width: 110px !important;
+    height: 110px !important;
   }
 }

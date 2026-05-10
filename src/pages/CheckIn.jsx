@@ -16,7 +16,7 @@ function CheckIn() {
   }, []);
 
   const loadParticipants = async () => {
-    const data = await readExcelFile('/Participants_QR_Complet.xlsx');
+    const data = await readExcelFile('/Participants_QR_new.xlsx');
     setParticipants(data);
     setFilteredParticipants(data);
   };
@@ -52,7 +52,7 @@ function CheckIn() {
       const filtered = participants.filter(p =>
         p.participant.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.societe.toLowerCase().includes(searchTerm.toLowerCase())
+        p.filiale.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredParticipants(filtered);
     } else {
@@ -67,7 +67,7 @@ function CheckIn() {
     const data = participants.map(p => ({
       ID: p.id,
       Participant: p.participant,
-      Société: p.societe,
+      Filiale: p.filiale,
       Discipline: p.discipline,
       Présent: checkedIn[p.id] ? 'Oui' : 'Non',
       'Heure pointage': checkedIn[p.id]?.time || '-'
@@ -138,7 +138,7 @@ function CheckIn() {
                 <span className="checkin-name">{participant.participant}</span>
               </div>
               <div className="checkin-details">
-                <span>{participant.societe}</span>
+                <span>{participant.filiale}</span>
                 <span className="separator">•</span>
                 <span>{participant.discipline}</span>
               </div>

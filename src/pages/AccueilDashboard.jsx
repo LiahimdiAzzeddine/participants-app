@@ -29,7 +29,7 @@ function AccueilDashboard() {
     setIsMobile(mobile);
     
     const loadData = async () => {
-      const data = await readExcelFile('/Participants_QR_Complet.xlsx');
+      const data = await readExcelFile('/Participants_QR_new.xlsx');
       setParticipants(data);
       setFilteredParticipants(data);
     };
@@ -51,7 +51,7 @@ function AccueilDashboard() {
       const filtered = participants.filter(p => 
         p.participant.toLowerCase().includes(query) ||
         p.id.toLowerCase().includes(query) ||
-        p.societe.toLowerCase().includes(query) ||
+        p.filiale.toLowerCase().includes(query) ||
         p.discipline.toLowerCase().includes(query)
       );
       setFilteredParticipants(filtered);
@@ -338,7 +338,7 @@ function AccueilDashboard() {
                   <div className="result-info">
                     <h4>{p.participant}</h4>
                     <p className="result-details">
-                      {p.id} • {p.discipline} • {p.societe}
+                      {p.id} • {p.discipline} • {p.filiale}
                     </p>
                   </div>
                   <div className="result-actions">
@@ -401,8 +401,8 @@ function AccueilDashboard() {
               <span className="value">{participant.discipline}</span>
             </div>
             <div className="info-row">
-              <span className="label">Société:</span>
-              <span className="value">{participant.societe}</span>
+              <span className="label">Filiale:</span>
+              <span className="value">{participant.filiale}</span>
             </div>
             <div className="info-row">
               <span className="label">Direction:</span>
@@ -416,6 +416,12 @@ function AccueilDashboard() {
               <span className="label">Lieu:</span>
               <span className="value">{participant.lieu}, {participant.ville}</span>
             </div>
+            {participant.villeDepart && (
+              <div className="info-row">
+                <span className="label">Ville de départ:</span>
+                <span className="value">{participant.villeDepart}</span>
+              </div>
+            )}
             {isPresent(participant.id) && (
               <div className="info-row highlight">
                 <span className="label">Pointé à:</span>

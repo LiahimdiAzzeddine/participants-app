@@ -22,7 +22,7 @@ function GenerateBadges() {
 
   const loadParticipants = async () => {
     const participantIds = location.state?.participantIds || [];
-    const allData = await readExcelFile('/Participants_QR_Complet.xlsx');
+    const allData = await readExcelFile('/Participants_QR_new.xlsx');
     
     if (participantIds.length > 0) {
       const filtered = allData.filter(p => participantIds.includes(p.id));
@@ -126,22 +126,6 @@ function GenerateBadges() {
                 <div className="badge-body">
                   <div className="info-grid">
                     <div className="info-item">
-                      <span className="info-label">Société</span>
-                      <span className="info-value">{participant.societe}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="info-label">Direction</span>
-                      <span className="info-value">{participant.direction}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="info-label">Email</span>
-                      <span className="info-value">{participant.emailParticipant}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="info-label">Responsable</span>
-                      <span className="info-value">{participant.emailResponsable}</span>
-                    </div>
-                    <div className="info-item">
                       <span className="info-label">Date</span>
                       <span className="info-value">{participant.dateCompetition}</span>
                     </div>
@@ -162,7 +146,7 @@ function GenerateBadges() {
                   <div className="qr-section">
                     <QRCodeCanvas
                       value={`${window.location.origin}/participant/${participant.id}`}
-                      size={150}
+                      size={120}
                       level="H"
                       includeMargin={true}
                     />
