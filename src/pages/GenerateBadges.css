@@ -120,7 +120,7 @@
   text-align: center;
   background: white;
   color: var(--amendis-gray-dark);
-  padding: 1rem;
+  padding:1rem 0.5rem ;
   margin: -1rem -1rem 0.5rem -1rem;
   border-bottom: 3px solid var(--amendis-red);
 }
@@ -128,7 +128,7 @@
 .badge-logo {
   width: 110px;
   height: auto;
-  margin: 0 auto 0.6rem auto;
+  margin: 0 auto 0.3rem auto;
   display: block;
 }
 
@@ -257,7 +257,7 @@
 
   .badge-logo {
     width: 90px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
   }
 
   .badge-header h1 {
