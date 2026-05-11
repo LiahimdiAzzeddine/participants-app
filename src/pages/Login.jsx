@@ -95,7 +95,6 @@ function Login() {
 
         <div className="login-body">
           <h2>Sélectionnez votre profil</h2>
-
           <div className="role-cards">
             <div
               className={`role-card ${selectedRole === 'admin' ? 'selected' : ''}`}
