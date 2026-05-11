@@ -64,7 +64,7 @@ function HomePage() {
     <div className="home-page">
       <header className="header">
         <h1>Gestion des Participants</h1>
-        <p>Tournoi Inter-filiales 2026</p>
+        <p>Tournoi Amendis</p>
         <div className="header-actions">
           <Link to="/checkin" className="btn-checkin-link">
             <FiCheckCircle />

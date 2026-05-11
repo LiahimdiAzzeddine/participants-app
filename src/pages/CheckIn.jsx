@@ -91,7 +91,7 @@ function CheckIn() {
       <header className="checkin-header">
         <div>
           <h1>Pointage des Présences</h1>
-          <p>Tournoi Inter-filiales 2026</p>
+          <p>Amendis</p>
         </div>
         <button onClick={() => navigate('/')} className="btn-back-home">
           Retour à l'accueil
