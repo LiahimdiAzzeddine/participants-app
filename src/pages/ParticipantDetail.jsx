@@ -118,8 +118,11 @@ function ParticipantDetail() {
       <div className="badge-container" ref={badgeRef}>
         <div className="badge">
           <div className="badge-header">
+            <img src="/Veolia_logo.png" alt="Veolia" className="badge-logo" />
             <h1>{participant.participant}</h1>
-            <p className="discipline-tag-header">{participant.discipline}</p>
+          </div>
+          <div className="badge-discipline">
+            <span className="discipline-tag-header">{participant.discipline}</span>
           </div>
 
           <div className="badge-body">

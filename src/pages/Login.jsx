@@ -89,6 +89,7 @@ function Login() {
     <div className="login-page">
       <div className="login-container">
         <div className="login-header">
+          <img src="/Veolia_logo.png" alt="Veolia" className="login-logo" />
           <h1>Tournoi Inter-filiales 2026</h1>
           <p>Système de Gestion des Participants</p>
         </div>

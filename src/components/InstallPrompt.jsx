@@ -76,7 +76,7 @@ function InstallPrompt() {
         </button>
         
         <div className="install-prompt-icon">
-          <img src="/logo2.png" alt="Tournoi Amendis" />
+          <img src="/veolia.svg" alt="Tournoi Amendis" />
         </div>
         
         <div className="install-prompt-text">

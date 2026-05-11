@@ -90,7 +90,7 @@
   overflow: hidden;
   margin-bottom: 1.5rem;
   box-shadow: var(--shadow-md);
-  max-width: 600px;
+  width: 300px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -100,10 +100,18 @@
 }
 
 .badge-header {
-  background: linear-gradient(135deg, var(--amendis-red) 0%, var(--amendis-red-dark) 100%);
-  color: white;
+  background: white;
+  color: var(--amendis-gray-dark);
   padding: 1.25rem 1.5rem;
   text-align: center;
+  border-bottom: 3px solid var(--amendis-red);
+}
+
+.badge-logo {
+  width: 150px;
+  height: auto;
+  margin: 0 auto 0.75rem auto;
+  display: block;
 }
 
 .badge-header h1 {
@@ -112,16 +120,21 @@
   font-weight: 700;
 }
 
+.badge-discipline {
+  background: white;
+  padding: 0.75rem 1.5rem;
+  text-align: center;
+}
+
 .discipline-tag-header {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--amendis-red);
   color: white;
   padding: 0.4rem 1rem;
   border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 0.85rem;
   margin: 0;
-  border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
 .badge-subtitle {
@@ -307,15 +320,25 @@
   }
 
   .badge-container {
-    max-width: 100%;
+    width: 100%;
+    max-width: 300px;
   }
 
   .badge-header {
     padding: 1rem 1.25rem;
   }
 
+  .badge-logo {
+    width: 120px;
+    margin-bottom: 0.6rem;
+  }
+
   .badge-header h1 {
     font-size: 1.3rem;
+  }
+
+  .badge-discipline {
+    padding: 0.6rem 1.25rem;
   }
 
   .discipline-tag-header {
@@ -397,8 +420,17 @@
     padding: 0.85rem 1rem;
   }
 
+  .badge-logo {
+    width: 100px;
+    margin-bottom: 0.5rem;
+  }
+
   .badge-header h1 {
     font-size: 1.15rem;
+  }
+
+  .badge-discipline {
+    padding: 0.5rem 1rem;
   }
 
   .discipline-tag-header {

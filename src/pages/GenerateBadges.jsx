@@ -44,10 +44,19 @@ function GenerateBadges() {
       const participant = participants[i];
       
       if (element) {
+        // Forcer la largeur avant la capture
+        const originalWidth = element.style.width;
+        element.style.width = '300px';
+        
         const canvas = await html2canvas(element, {
           scale: 2,
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
+          width: 300,
+          windowWidth: 300
         });
+        
+        // Restaurer la largeur originale
+        element.style.width = originalWidth;
         
         // Convertir en blob PNG
         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
@@ -119,8 +128,11 @@ function GenerateBadges() {
             >
               <div className="badge">
                 <div className="badge-header">
+                  <img src="/Veolia_logo.png" alt="Veolia" className="badge-logo" />
                   <h1>{participant.participant}</h1>
-                  <p className="discipline-tag-header">{participant.discipline}</p>
+                </div>
+                <div className="badge-discipline">
+                  <span className="discipline-tag-header">{participant.discipline}</span>
                 </div>
 
                 <div className="badge-body">

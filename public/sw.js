@@ -2,7 +2,7 @@ const CACHE_NAME = 'tournoi-amendis-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/logo2.png',
+  '/veolia.svg',
   '/amendis-logo.png',
   '/manifest.json'
 ];
