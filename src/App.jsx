@@ -8,21 +8,22 @@ import AccueilDashboard from './pages/AccueilDashboard';
 import ParticipantPortal from './pages/ParticipantPortal';
 import ParticipantDetail from './pages/ParticipantDetail';
 import GenerateBadges from './pages/GenerateBadges';
-import InstallPrompt from './components/InstallPrompt';
+// import InstallPrompt from './components/InstallPrompt';
 import './App.css';
 
+// PWA DÉSACTIVÉE TEMPORAIREMENT
 // Enregistrer le Service Worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        console.log('Service Worker enregistré avec succès:', registration.scope);
-      })
-      .catch((error) => {
-        console.log('Échec de l\'enregistrement du Service Worker:', error);
-      });
-  });
-}
+// if ('serviceWorker' in navigator) {
+//   window.addEventListener('load', () => {
+//     navigator.serviceWorker.register('/sw.js')
+//       .then((registration) => {
+//         console.log('Service Worker enregistré avec succès:', registration.scope);
+//       })
+//       .catch((error) => {
+//         console.log('Échec de l\'enregistrement du Service Worker:', error);
+//       });
+//   });
+// }
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { user, loading } = useAuth();
@@ -70,7 +71,7 @@ function App() {
     <AuthProvider>
       <PresenceProvider>
         <Router>
-          <InstallPrompt />
+          {/* <InstallPrompt /> */}
           <Routes>
             <Route path="/" element={<HomePage />} />
             
