@@ -89,7 +89,7 @@ function Login() {
     <div className="login-page">
       <div className="login-container">
         <div className="login-header">
-          <h1>Amendis</h1>
+          <h1>Tournoi Inter-filiales 2026</h1>
           <p>Système de Gestion des Participants</p>
         </div>
 
