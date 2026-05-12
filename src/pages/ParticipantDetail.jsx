@@ -6,16 +6,20 @@ import { FiArrowLeft, FiCheckCircle, FiClock, FiDownload, FiXCircle, FiUser, FiB
 import { readExcelFile } from '../utils/excelReader';
 import { useAuth } from '../context/AuthContext';
 import { usePresence } from '../context/PresenceContext';
+import { useConsent } from '../context/ConsentContext';
+import ConsentForm from '../components/ConsentForm';
 import './ParticipantDetail.css';
 
 function ParticipantDetail() {
   const { id } = useParams();
   const [participant, setParticipant] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showConsentForm, setShowConsentForm] = useState(false);
   const badgeRef = useRef(null);
   const qrRef = useRef(null);
   const { user } = useAuth();
   const { markPresent, markAbsent, isPresent, getPresenceInfo } = usePresence();
+  const { hasConsent, validateConsent } = useConsent();
 
   const isAccueil = user?.role === 'accueil';
   const present = participant ? isPresent(participant.id) : false;
@@ -30,6 +34,23 @@ function ParticipantDetail() {
     const found = data.find(p => p.id === id);
     setParticipant(found);
     setLoading(false);
+    
+    // Vérifier si le participant doit valider le consentement
+    // Seulement si ce n'est pas l'équipe d'accueil qui consulte
+    if (found && !user?.role && !hasConsent(found.id)) {
+      setShowConsentForm(true);
+    }
+  };
+
+  const handleConsentValidate = async (lieu) => {
+    if (participant) {
+      await validateConsent(participant.id, lieu);
+      setShowConsentForm(false);
+    }
+  };
+
+  const handleConsentCancel = () => {
+    setShowConsentForm(false);
   };
 
   const downloadQRCode = () => {
@@ -88,6 +109,14 @@ function ParticipantDetail() {
 
   return (
     <div className="detail-page">
+      {showConsentForm && participant && (
+        <ConsentForm
+          participant={participant}
+          onValidate={handleConsentValidate}
+          onCancel={handleConsentCancel}
+        />
+      )}
+
       <Link to={isAccueil ? "/accueil" : "/"} className="btn-back">
         <FiArrowLeft style={{ marginRight: '0.5rem' }} />
         Retour
