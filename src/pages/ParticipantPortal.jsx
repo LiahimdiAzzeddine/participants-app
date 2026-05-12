@@ -4,7 +4,9 @@ import { BrowserMultiFormatReader } from '@zxing/library';
 import { FiCamera, FiCheckCircle, FiClock, FiLogOut, FiUser, FiAward, FiMapPin, FiCalendar, FiMail, FiBriefcase } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { usePresence } from '../context/PresenceContext';
+import { useConsent } from '../context/ConsentContext';
 import { readExcelFile } from '../utils/excelReader';
+import ConsentForm from '../components/ConsentForm';
 import './ParticipantPortal.css';
 
 function ParticipantPortal() {
@@ -15,10 +17,12 @@ function ParticipantPortal() {
   const [cameras, setCameras] = useState([]);
   const [selectedCamera, setSelectedCamera] = useState('');
   const [isMobile, setIsMobile] = useState(false);
+  const [showConsentForm, setShowConsentForm] = useState(false);
   const videoRef = useRef(null);
   const codeReader = useRef(null);
   const { logout, user } = useAuth();
   const { isPresent, getPresenceInfo } = usePresence();
+  const { hasConsent, validateConsent } = useConsent();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -209,8 +213,15 @@ function ParticipantPortal() {
       const found = participants.find(p => p.id === participantId);
       
       if (found) {
-        setParticipant(found);
-        setMessage('Fiche chargée avec succès');
+        // Vérifier si le participant a validé le consentement
+        if (!hasConsent(participantId)) {
+          setParticipant(found);
+          setShowConsentForm(true);
+          setMessage('');
+        } else {
+          setParticipant(found);
+          setMessage('Fiche chargée avec succès');
+        }
       } else {
         setMessage('Participant non trouvé');
       }
@@ -219,11 +230,32 @@ function ParticipantPortal() {
     }
   };
 
+  const handleConsentValidate = async (lieu) => {
+    if (participant) {
+      await validateConsent(participant.id, lieu);
+      setShowConsentForm(false);
+      setMessage('Consentement validé avec succès');
+    }
+  };
+
+  const handleConsentCancel = () => {
+    setShowConsentForm(false);
+    setMessage('Vous pouvez consulter votre badge sans valider le consentement');
+  };
+
   const presenceInfo = participant ? getPresenceInfo(participant.id) : null;
   const present = participant ? isPresent(participant.id) : false;
 
   return (
     <div className="participant-portal">
+      {showConsentForm && participant && (
+        <ConsentForm
+          participant={participant}
+          onValidate={handleConsentValidate}
+          onCancel={handleConsentCancel}
+        />
+      )}
+
       <header className="portal-header">
         <div>
           <h1>Portail Participant</h1>
@@ -235,7 +267,7 @@ function ParticipantPortal() {
         </button>
       </header>
 
-      {!participant ? (
+      {!participant || showConsentForm ? (
         <div className="scanner-section">
           <div className="scanner-container-portal">
             {!scanning ? (

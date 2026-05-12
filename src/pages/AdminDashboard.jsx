@@ -4,6 +4,7 @@ import { FiUsers, FiCheckCircle, FiXCircle, FiAward, FiSearch, FiDownload, FiFil
 import { readExcelFile } from '../utils/excelReader';
 import { useAuth } from '../context/AuthContext';
 import { usePresence } from '../context/PresenceContext';
+import { useConsent } from '../context/ConsentContext';
 import './AdminDashboard.css';
 
 function AdminDashboard() {
@@ -14,6 +15,7 @@ function AdminDashboard() {
   const [selectedParticipants, setSelectedParticipants] = useState([]);
   const { logout } = useAuth();
   const { presences } = usePresence();
+  const { consents } = useConsent();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -94,7 +96,45 @@ function AdminDashboard() {
     link.click();
   };
 
+  const exportConsents = () => {
+    // Filtrer uniquement les participants qui ont accepté le consentement
+    const participantsWithConsent = participants.filter(p => consents[p.id]?.validated);
+    
+    const data = participantsWithConsent.map(p => ({
+      ID: p.id,
+      Participant: p.participant,
+      Filiale: p.filiale,
+      Discipline: p.discipline,
+      Direction: p.direction,
+      'Email participant': p.emailParticipant,
+      'Email responsable': p.emailResponsable,
+      Ville: p.ville,
+      'Ville de départ': p.villeDepart || '-',
+      'Date validation': consents[p.id]?.date || '-',
+      'Lieu validation': consents[p.id]?.lieu || '-',
+      'Heure validation': consents[p.id]?.timestamp ? new Date(consents[p.id].timestamp).toLocaleTimeString('fr-FR') : '-'
+    }));
+
+    if (data.length === 0) {
+      alert('Aucun participant n\'a encore accepté le consentement.');
+      return;
+    }
+
+    const csv = [
+      Object.keys(data[0]).join(','),
+      ...data.map(row => Object.values(row).map(v => `"${v}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `consentements_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  };
+
   const presentCount = participants.filter(p => presences[p.id]).length;
+  const consentCount = participants.filter(p => consents[p.id]?.validated).length;
 
   return (
     <div className="admin-dashboard">
@@ -170,6 +210,10 @@ function AdminDashboard() {
           <button onClick={exportPresences} className="btn-action secondary">
             <FiDownload style={{ marginRight: '0.5rem' }} />
             Exporter les présences
+          </button>
+          <button onClick={exportConsents} className="btn-action secondary">
+            <FiDownload style={{ marginRight: '0.5rem' }} />
+            Exporter les consentements ({consentCount})
           </button>
         </div>
       </div>

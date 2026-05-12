@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { PresenceProvider } from './context/PresenceContext';
+import { ConsentProvider } from './context/ConsentContext';
 import { useEffect } from 'react';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
@@ -70,10 +71,11 @@ function App() {
   return (
     <AuthProvider>
       <PresenceProvider>
-        <Router>
-          {/* <InstallPrompt /> */}
-          <Routes>
-            <Route path="/" element={<HomePage />} />
+        <ConsentProvider>
+          <Router>
+            {/* <InstallPrompt /> */}
+            <Routes>
+              <Route path="/" element={<HomePage />} />
             
             <Route
               path="/admin"
@@ -113,7 +115,8 @@ function App() {
               }
             />
           </Routes>
-        </Router>
+          </Router>
+        </ConsentProvider>
       </PresenceProvider>
     </AuthProvider>
   );
