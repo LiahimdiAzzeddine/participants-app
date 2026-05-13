@@ -16,7 +16,7 @@ function CheckIn() {
   }, []);
 
   const loadParticipants = async () => {
-    const data = await readExcelFile('/Participants_QR_new.xlsx');
+    const data = await readExcelFile('/ListeParticipantsTournoiInterfiliales2026.xlsx');
     setParticipants(data);
     setFilteredParticipants(data);
   };

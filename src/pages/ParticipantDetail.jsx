@@ -30,7 +30,7 @@ function ParticipantDetail() {
   }, [id]);
 
   const loadParticipant = async () => {
-    const data = await readExcelFile('/Participants_QR_new.xlsx');
+    const data = await readExcelFile('/ListeParticipantsTournoiInterfiliales2026.xlsx');
     const found = data.find(p => p.id === id);
     setParticipant(found);
     setLoading(false);
@@ -178,13 +178,15 @@ function ParticipantDetail() {
                 </span>
                 <span className="info-value">{participant.lieu}</span>
               </div>
-              <div className="info-item">
-                <span className="info-label">
-                  <FiMapPin style={{ marginRight: '0.35rem' }} />
-                  Ville
-                </span>
-                <span className="info-value">{participant.ville}</span>
-              </div>
+              {participant.ville && (
+                <div className="info-item">
+                  <span className="info-label">
+                    <FiMapPin style={{ marginRight: '0.35rem' }} />
+                    Ville
+                  </span>
+                  <span className="info-value">{participant.ville}</span>
+                </div>
+              )}
             </div>
 
             <div className="qr-section" ref={qrRef}>

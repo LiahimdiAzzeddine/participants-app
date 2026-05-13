@@ -23,7 +23,7 @@ function AdminDashboard() {
   }, []);
 
   const loadParticipants = async () => {
-    const data = await readExcelFile('/Participants_QR_new.xlsx');
+    const data = await readExcelFile('/ListeParticipantsTournoiInterfiliales2026.xlsx');
     setParticipants(data);
     setFilteredParticipants(data);
   };
@@ -76,7 +76,7 @@ function AdminDashboard() {
       Filiale: p.filiale,
       Discipline: p.discipline,
       Direction: p.direction,
-      Ville: p.ville,
+      Ville: p.ville || '-',
       'Ville de départ': p.villeDepart || '-',
       Présent: presences[p.id] ? 'Oui' : 'Non',
       'Heure pointage': presences[p.id]?.time || '-',
@@ -107,8 +107,8 @@ function AdminDashboard() {
       Discipline: p.discipline,
       Direction: p.direction,
       'Email participant': p.emailParticipant,
-      'Email responsable': p.emailResponsable,
-      Ville: p.ville,
+      'Email responsable': p.emailResponsable || '-',
+      Ville: p.ville || '-',
       'Ville de départ': p.villeDepart || '-',
       'Date validation': consents[p.id]?.date || '-',
       'Lieu validation': consents[p.id]?.lieu || '-',
@@ -254,7 +254,7 @@ function AdminDashboard() {
                 <td>{participant.filiale}</td>
                 <td><span className="discipline-tag">{participant.discipline}</span></td>
                 <td>{participant.direction}</td>
-                <td>{participant.ville}</td>
+                <td>{participant.ville || '-'}</td>
                 <td>
                   {presences[participant.id] ? (
                     <span className="status-badge present">Présent</span>

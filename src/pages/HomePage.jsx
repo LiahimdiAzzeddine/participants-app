@@ -17,7 +17,7 @@ function HomePage() {
   }, []);
 
   const loadParticipants = async () => {
-    const data = await readExcelFile('/Participants_QR_new.xlsx');
+    const data = await readExcelFile('/ListeParticipantsTournoiInterfiliales2026.xlsx');
     setParticipants(data);
     setFilteredParticipants(data);
     setLoading(false);
@@ -121,11 +121,13 @@ function HomePage() {
           <span className="stat-number">{disciplines.length}</span>
           <span className="stat-label">Disciplines</span>
         </div>
-        <div className="stat-card">
-          <FiMapPin className="stat-icon" />
-          <span className="stat-number">{villes.length}</span>
-          <span className="stat-label">Villes</span>
-        </div>
+        {villes.length > 0 && (
+          <div className="stat-card">
+            <FiMapPin className="stat-icon" />
+            <span className="stat-number">{villes.length}</span>
+            <span className="stat-label">Villes</span>
+          </div>
+        )}
       </div>
 
       <div className="participants-grid">
@@ -145,10 +147,12 @@ function HomePage() {
             <h3>{participant.participant}</h3>
             <p className="societe">{participant.filiale}</p>
             <div className="card-info">
-              <p className="info-item">
-                <FiMapPin />
-                <span>{participant.ville}</span>
-              </p>
+              {participant.ville && (
+                <p className="info-item">
+                  <FiMapPin />
+                  <span>{participant.ville}</span>
+                </p>
+              )}
               <p className="info-item">
                 <FiCalendar />
                 <span>{participant.dateCompetition}</span>

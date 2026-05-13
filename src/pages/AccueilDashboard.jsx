@@ -29,7 +29,7 @@ function AccueilDashboard() {
     setIsMobile(mobile);
     
     const loadData = async () => {
-      const data = await readExcelFile('/Participants_QR_new.xlsx');
+      const data = await readExcelFile('/ListeParticipantsTournoiInterfiliales2026.xlsx');
       setParticipants(data);
       setFilteredParticipants(data);
     };
@@ -414,7 +414,10 @@ function AccueilDashboard() {
             </div>
             <div className="info-row">
               <span className="label">Lieu:</span>
-              <span className="value">{participant.lieu}, {participant.ville}</span>
+              <span className="value">
+                {participant.lieu}
+                {participant.ville && `, ${participant.ville}`}
+              </span>
             </div>
             {participant.villeDepart && (
               <div className="info-row">

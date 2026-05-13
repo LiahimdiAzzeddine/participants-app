@@ -22,7 +22,7 @@ function GenerateBadges() {
 
   const loadParticipants = async () => {
     const participantIds = location.state?.participantIds || [];
-    const allData = await readExcelFile('/Participants_QR_new.xlsx');
+    const allData = await readExcelFile('/ListeParticipantsTournoiInterfiliales2026.xlsx');
     
     if (participantIds.length > 0) {
       const filtered = allData.filter(p => participantIds.includes(p.id));
@@ -149,10 +149,12 @@ function GenerateBadges() {
                       <span className="info-label">Lieu</span>
                       <span className="info-value">{participant.lieu}</span>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Ville</span>
-                      <span className="info-value">{participant.ville}</span>
-                    </div>
+                    {participant.ville && (
+                      <div className="info-item">
+                        <span className="info-label">Ville</span>
+                        <span className="info-value">{participant.ville}</span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="qr-section">

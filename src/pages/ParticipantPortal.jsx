@@ -31,7 +31,7 @@ function ParticipantPortal() {
     setIsMobile(mobile);
     
     const loadData = async () => {
-      const data = await readExcelFile('/Participants_QR_new.xlsx');
+      const data = await readExcelFile('/ListeParticipantsTournoiInterfiliales2026.xlsx');
       setParticipants(data);
       
       // Si l'utilisateur a déjà un participant ID, le charger
@@ -414,7 +414,10 @@ function ParticipantPortal() {
                     <FiMapPin style={{ marginRight: '0.35rem' }} />
                     Lieu
                   </span>
-                  <span className="value">{participant.lieu}, {participant.ville}</span>
+                  <span className="value">
+                    {participant.lieu}
+                    {participant.ville && `, ${participant.ville}`}
+                  </span>
                 </div>
                 {participant.villeDepart && (
                   <div className="info-item-portal">
